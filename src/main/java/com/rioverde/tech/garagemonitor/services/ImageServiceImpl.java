@@ -1,5 +1,6 @@
 package com.rioverde.tech.garagemonitor.services;
 
+import com.rioverde.tech.garagemonitor.camera.Camera;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -16,6 +17,18 @@ public class ImageServiceImpl implements ImagesService{
 
     @Value("${door.image:}")
     String doorImageFile = null;
+
+    private final Camera camera;
+
+    public ImageServiceImpl(Camera camera) {
+        this.camera = camera;
+    }
+
+    @Override
+    public byte[] takePicture()  {
+        log.debug("Getting image from camera");
+        return camera.takePicture();
+    }
 
     @Override
     public byte[] getLatestImage() throws Exception {
@@ -43,4 +56,6 @@ public class ImageServiceImpl implements ImagesService{
 
         return bos.toByteArray();
     }
+
+
 }
