@@ -69,5 +69,6 @@ public class ImageServiceTest {
 
         thrown.expect(CameraException.class);
         byte [] pix  = service.takePicture();
+
     }
 }

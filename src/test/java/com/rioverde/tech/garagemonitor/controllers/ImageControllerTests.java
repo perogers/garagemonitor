@@ -39,13 +39,14 @@ public class ImageControllerTests {
 
     @Test
     public void getImageFromClasspathTest() throws Exception{
-        byte [] image = new byte[100];
+        byte [] image = new byte[10000];
         Arrays.fill(image, (byte)0x1);
 
         when(service.getLatestImage()).thenReturn(image);
 
         MockHttpServletResponse response = mockMvc.perform(get("/door/image"))
                 .andExpect(status().isOk())
+                .andExpect(header().string("Cache-Control", "max-age=60"))
                 .andReturn().getResponse();
 
         assertEquals("image/jpeg", response.getContentType());
@@ -58,13 +59,14 @@ public class ImageControllerTests {
 
     @Test
     public void getImageFromFilesystemTest() throws Exception{
-        byte [] image = new byte[100];
-        Arrays.fill(image, (byte)0x1);
+        byte [] image = new byte[10000];
+        Arrays.fill(image, (byte)0xA);
 
         when(service.getLatestImage()).thenReturn(image);
 
         MockHttpServletResponse response = mockMvc.perform(get("/door/image"))
                 .andExpect(status().isOk())
+                .andExpect(header().string("Cache-Control", "max-age=60"))
                 .andReturn().getResponse();
 
         assertEquals("image/jpeg", response.getContentType());

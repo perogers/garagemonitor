@@ -2,14 +2,15 @@ package com.rioverde.tech.garagemonitor.controllers;
 
 import com.rioverde.tech.garagemonitor.services.ImagesService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Controller
@@ -23,25 +24,25 @@ public class ImagesController {
 
 
     @GetMapping({"/door/image"})
-    public void getImage(HttpServletResponse response) throws IOException, Exception {
+    public ResponseEntity<byte[]> getImage() throws IOException, Exception {
 
         byte[] image = service.getLatestImage();
 
-        response.setContentType("image/jpeg");
-        response.setContentLength(image.length);
-        InputStream is = new ByteArrayInputStream(image);
-        IOUtils.copy(is, response.getOutputStream());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
     }
 
     @GetMapping({"/door/camera"})
-    public void getCamera(HttpServletResponse response) throws IOException, Exception {
+    public ResponseEntity<byte[]> getCameraImage(HttpServletResponse response) throws IOException, Exception {
         log.debug("Calling");
         byte[] image = service.takePicture();
         log.debug("Got image");
-        response.setContentType("image/jpeg");
-        response.setContentLength(image.length);
-        InputStream is = new ByteArrayInputStream(image);
-        IOUtils.copy(is, response.getOutputStream());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
     }
 
 }
