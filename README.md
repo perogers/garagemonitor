@@ -1,5 +1,7 @@
 **Garage Monitor**
 
+[![CircleCI](https://circleci.com/gh/perogers/garagemonitor.svg?style=svg)](https://circleci.com/gh/perogers/garagemonitor)
+
 This is a Java / Raspberry Pi Application that will return a still image from a camera and provide the temperature.
 The application uses Spring Boot.
 
